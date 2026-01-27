@@ -51,24 +51,39 @@ if [ $machine == "Linux" ]; then
     sudo apt-get update -y
     [ $zsh == true ] && sudo apt-get install -y zsh
     [ $tmux == true ] && sudo apt-get install -y tmux
-    sudo apt-get install -y less nano htop ncdu nvtop lsof rsync jq
-    curl -LsSf https://astral.sh/uv/install.sh | sh
+    sudo apt-get install -y less nano htop ncdu nvtop lsof rsync jq pkg-config
+
+
+    if ! command -v uv &> /dev/null; then
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+    else
+        echo "uv already installed, skipping..."
+    fi
     
     if [ $extras == true ]; then
         sudo apt-get install -y ripgrep
 
-        yes | curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | /bin/bash
-        yes | brew install dust jless
+        if [ -x ~/.linuxbrew/bin/brew ]; then
+            echo "Homebrew already installed, skipping..."
+        else
+            git clone https://github.com/Homebrew/brew ~/.linuxbrew/Homebrew
+            mkdir -p ~/.linuxbrew/bin
+            ln -s ../Homebrew/bin/brew ~/.linuxbrew/bin/brew
+            ~/.linuxbrew/bin/brew update --force --quiet
+        fi
 
-        yes | curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+        eval "$(~/.linuxbrew/bin/brew shellenv)"
+        
+        brew install dust jless
+
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
         . "$HOME/.cargo/env" 
-        yes | cargo install code2prompt
-        yes | brew install peco
+        cargo install code2prompt
+        brew install peco
 
         sudo apt-get install -y npm
-        yes | npm i -g shell-ask
+        sudo npm i -g shell-ask
     fi
-
 # Installing on mac with homebrew
 elif [ $machine == "Mac" ]; then
     yes | brew install coreutils ncdu htop ncdu rsync btop jq  # Mac won't have realpath before coreutils installed
@@ -128,6 +143,6 @@ fi
 if [ $extras == true ]; then
     echo " --------- INSTALLING EXTRAS ⏳ ----------- "
     if command -v cargo &> /dev/null; then
-        NO_ASK_OPENAI_API_KEY=1 bash -c "$(curl -fsSL https://raw.githubusercontent.com/hmirin/ask.sh/main/install.sh)"
+        NO_ASK_OPENAI_API_KEY=1 zsh -c "$(curl -fsSL https://raw.githubusercontent.com/hmirin/ask.sh/main/install.sh)"
     fi
 fi
