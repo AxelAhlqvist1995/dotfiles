@@ -8,9 +8,8 @@ fi
 export TERM="xterm-256color"
 
 ZSH_DISABLE_COMPFIX=true
-#ZSH_THEME="powerlevel10k/powerlevel10k"
 ZSH=$HOME/.oh-my-zsh
-ZSH_THEME=""
+ZSH_THEME="powerlevel10k/powerlevel10k"
 
 plugins=(zsh-autosuggestions zsh-syntax-highlighting zsh-completions zsh-history-substring-search)
 
@@ -60,6 +59,6 @@ if command -v ask-sh &> /dev/null; then
   export ASK_SH_OPENAI_MODEL=gpt-4o-mini
   eval "$(ask-sh --init)"
 fi
-eval "$(~/.linuxbrew/bin/brew shellenv zsh)"
+[ -f ~/.linuxbrew/bin/brew ] && eval "$(~/.linuxbrew/bin/brew shellenv zsh)"
 
 #cat $CONFIG_DIR/start.txt
