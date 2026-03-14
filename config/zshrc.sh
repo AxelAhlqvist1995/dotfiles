@@ -8,8 +8,9 @@ fi
 export TERM="xterm-256color"
 
 ZSH_DISABLE_COMPFIX=true
-ZSH_THEME="powerlevel10k/powerlevel10k"
+#ZSH_THEME="powerlevel10k/powerlevel10k"
 ZSH=$HOME/.oh-my-zsh
+ZSH_THEME=""
 
 plugins=(zsh-autosuggestions zsh-syntax-highlighting zsh-completions zsh-history-substring-search)
 
@@ -21,7 +22,7 @@ source $CONFIG_DIR/key_bindings.sh
 add_to_path "${DOT_DIR}/custom_bins"
 
 # for uv
-if [ -d "$HOME/.local/bin" ]; then
+if [ -d "$HOME/.local/bin/env" ]; then
   source $HOME/.local/bin/env
 fi
 
@@ -60,4 +61,4 @@ if command -v ask-sh &> /dev/null; then
   eval "$(ask-sh --init)"
 fi
 
-cat $CONFIG_DIR/start.txt
+#cat $CONFIG_DIR/start.txt

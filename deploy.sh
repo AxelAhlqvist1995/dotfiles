@@ -2,7 +2,7 @@
 set -euo pipefail
 USAGE=$(cat <<-END
     Usage: ./deploy.sh [OPTIONS] [--aliases <alias1,alias2,...>], eg. ./deploy.sh --vim --aliases=speechmatics,custom
-    Creates ~/.zshrc and ~/.tmux.conf with location
+    Creates ~/.zshrc and ~/.tmux.conf (linux) or ~/.config/tmux/tmux.conf.local (mac) with location
     specific config
 
     OPTIONS:
@@ -31,10 +31,18 @@ while (( "$#" )); do
 done
 
 echo "deploying on machine..."
-echo "using extra aliases: ${ALIASES[@]}"
+echo "using extra aliases: ${ALIASES[*]:-}"
 
 # Tmux setup
-echo "source $DOT_DIR/config/tmux.conf" > $HOME/.tmux.conf
+# On Mac, oh-my-tmux is installed via Homebrew and loads customizations from
+# ~/.config/tmux/tmux.conf.local. On Linux, use the standard ~/.tmux.conf.
+operating_system="$(uname -s)"
+if [ "$operating_system" = "Darwin" ]; then
+    mkdir -p $HOME/.config/tmux
+    echo "source $DOT_DIR/config/tmux.conf" > $HOME/.config/tmux/tmux.conf.local
+else
+    echo "source $DOT_DIR/config/tmux.conf" > $HOME/.tmux.conf
+fi
 
 # Vimrc
 if [[ $VIM == "true" ]]; then
@@ -46,7 +54,7 @@ fi
 echo "source $DOT_DIR/config/zshrc.sh" > $HOME/.zshrc
 # Append additional alias scripts if specified
 if [ -n "${ALIASES+x}" ]; then
-    for alias in "${ALIASES[@]}"; do
+    for alias in "${ALIASES[@]:-}"; do
         echo "source $DOT_DIR/config/aliases_${alias}.sh" >> $HOME/.zshrc
     done
 fi
