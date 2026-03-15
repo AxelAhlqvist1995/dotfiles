@@ -34,9 +34,17 @@ echo "deploying on machine..."
 echo "using extra aliases: ${ALIASES[*]:-}"
 
 # Tmux setup
-# oh-my-tmux loads customizations from ~/.config/tmux/tmux.conf.local on both Mac and Linux
-mkdir -p $HOME/.config/tmux
-echo "source $DOT_DIR/config/tmux.conf" > $HOME/.config/tmux/tmux.conf.local
+# On Mac, oh-my-tmux framework lives at ~/.config/tmux/tmux.conf (loaded via XDG).
+# Customizations go in ~/.config/tmux/tmux.conf.local
+# On Linux, oh-my-tmux framework should be manually copied to ~/.tmux.conf.
+# Customizations go in ~/.tmux.conf.local
+operating_system="$(uname -s)"
+if [ "$operating_system" = "Darwin" ]; then
+    mkdir -p $HOME/.config/tmux
+    echo "source $DOT_DIR/config/tmux.conf" > $HOME/.config/tmux/tmux.conf.local
+else
+    echo "source $DOT_DIR/config/tmux.conf" > $HOME/.tmux.conf.local
+fi
 
 # Vimrc
 if [[ $VIM == "true" ]]; then
