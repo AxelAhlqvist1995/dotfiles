@@ -48,6 +48,34 @@ else
 fi
 cp "$HOME/.local/share/tmux/oh-my-tmux/.tmux.conf" "$HOME/.tmux.conf"
 
+echo "=== Installing Neovim ==="
+if ! command -v nvim &> /dev/null; then
+    ARCH=$(uname -m)
+    if [ "$ARCH" = "aarch64" ]; then
+        NVIM_URL="https://github.com/neovim/neovim/releases/latest/download/nvim-linux-arm64.tar.gz"
+        NVIM_DIR="nvim-linux-arm64"
+    else
+        NVIM_URL="https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz"
+        NVIM_DIR="nvim-linux-x86_64"
+    fi
+    curl -LO "$NVIM_URL"
+    sudo tar -C /opt -xzf "$NVIM_DIR.tar.gz"
+    sudo ln -sf "/opt/$NVIM_DIR/bin/nvim" /usr/local/bin/nvim
+    rm "$NVIM_DIR.tar.gz"
+else
+    echo "Already installed, skipping"
+fi
+
+echo "=== Installing LazyVim ==="
+if [ ! -d "$HOME/.config/nvim" ]; then
+    git clone https://github.com/LazyVim/starter "$HOME/.config/nvim"
+    rm -rf "$HOME/.config/nvim/.git"
+    echo "Bootstrapping LazyVim plugins (this may take a minute)..."
+    nvim --headless "+Lazy! sync" +qa 2>&1
+else
+    echo "Already installed, skipping"
+fi
+
 echo "=== Cloning dotfiles ==="
 if [ ! -d "$DOTFILES_DIR" ]; then
     git clone "$DOTFILES_REPO" "$DOTFILES_DIR"
@@ -63,3 +91,4 @@ echo ""
 echo "=== Setup complete! ==="
 echo "Run 'exec zsh' to start using your new shell config."
 echo "Run 'tmux' to start tmux with oh-my-tmux."
+echo "Run 'nvim' to start Neovim with LazyVim."
