@@ -46,6 +46,14 @@ else
     echo "source $DOT_DIR/config/tmux.conf" > $HOME/.tmux.conf.local
 fi
 
+# Neovim / LazyVim config
+mkdir -p "$HOME/.config"
+if [ -d "$HOME/.config/nvim" ] && [ ! -L "$HOME/.config/nvim" ]; then
+    echo "Backing up existing nvim config to ~/.config/nvim.bak"
+    mv "$HOME/.config/nvim" "$HOME/.config/nvim.bak"
+fi
+ln -sf "$DOT_DIR/config/nvim" "$HOME/.config/nvim"
+
 # Vimrc
 if [[ $VIM == "true" ]]; then
     echo "deploying .vimrc"

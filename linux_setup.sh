@@ -66,15 +66,9 @@ else
     echo "Already installed, skipping"
 fi
 
-echo "=== Installing LazyVim ==="
-if [ ! -d "$HOME/.config/nvim" ]; then
-    git clone https://github.com/LazyVim/starter "$HOME/.config/nvim"
-    rm -rf "$HOME/.config/nvim/.git"
-    echo "Bootstrapping LazyVim plugins (this may take a minute)..."
-    nvim --headless "+Lazy! sync" +qa 2>&1
-else
-    echo "Already installed, skipping"
-fi
+echo "=== Bootstrapping LazyVim plugins ==="
+# deploy.sh will symlink ~/.config/nvim from dotfiles, then we bootstrap plugins
+echo "Plugins will be bootstrapped after deploy runs..."
 
 echo "=== Cloning dotfiles ==="
 if [ ! -d "$DOTFILES_DIR" ]; then
@@ -86,6 +80,10 @@ fi
 
 echo "=== Running deploy ==="
 cd "$DOTFILES_DIR" && ./deploy.sh
+
+echo "=== Bootstrapping LazyVim plugins ==="
+echo "This may take a minute..."
+nvim --headless "+Lazy! sync" +qa 2>&1
 
 echo ""
 echo "=== Setup complete! ==="
