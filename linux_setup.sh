@@ -70,6 +70,27 @@ echo "=== Bootstrapping LazyVim plugins ==="
 # deploy.sh will symlink ~/.config/nvim from dotfiles, then we bootstrap plugins
 echo "Plugins will be bootstrapped after deploy runs..."
 
+echo "=== Installing fnm and Node.js ==="
+if [ ! -d "$HOME/.local/share/fnm" ]; then
+    curl -fsSL https://fnm.vercel.app/install | bash --no-use
+    export PATH="$HOME/.local/share/fnm:$PATH"
+    eval "$(fnm env)"
+    fnm install --lts
+    fnm use lts-latest
+else
+    echo "fnm already installed, skipping"
+    export PATH="$HOME/.local/share/fnm:$PATH"
+    eval "$(fnm env)"
+    fnm use lts-latest 2>/dev/null || fnm install --lts && fnm use lts-latest
+fi
+
+echo "=== Installing Claude Code ==="
+if ! command -v claude &> /dev/null; then
+    npm install -g @anthropic-ai/claude-code
+else
+    echo "Already installed, skipping"
+fi
+
 echo "=== Cloning dotfiles ==="
 if [ ! -d "$DOTFILES_DIR" ]; then
     git clone "$DOTFILES_REPO" "$DOTFILES_DIR"
