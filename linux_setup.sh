@@ -72,7 +72,7 @@ echo "Plugins will be bootstrapped after deploy runs..."
 
 echo "=== Installing fnm and Node.js ==="
 if [ ! -d "$HOME/.local/share/fnm" ]; then
-    curl -fsSL https://fnm.vercel.app/install | bash -s -- --no-use
+    curl -fsSL https://fnm.vercel.app/install | bash
     export PATH="$HOME/.local/share/fnm:$PATH"
     eval "$(fnm env)"
     fnm install --lts
