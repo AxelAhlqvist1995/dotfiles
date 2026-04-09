@@ -4,6 +4,11 @@ set -euo pipefail
 DOTFILES_REPO="https://github.com/axelahlqvist1995/dotfiles.git"
 DOTFILES_DIR="$HOME/dotfiles"
 
+echo "=== Configuring git ==="
+git config --global user.email "axelahlqvist1995@gmail.com"
+git config --global user.name "axelahlqvist1995"
+git config --global credential.helper store
+
 echo "=== Installing packages ==="
 sudo apt-get update -q
 sudo apt-get install -y tmux git zsh curl
@@ -70,6 +75,14 @@ echo "=== Bootstrapping LazyVim plugins ==="
 # deploy.sh will symlink ~/.config/nvim from dotfiles, then we bootstrap plugins
 echo "Plugins will be bootstrapped after deploy runs..."
 
+echo "=== Installing uv ==="
+if ! command -v uv &> /dev/null; then
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    export PATH="$HOME/.local/bin:$PATH"
+else
+    echo "Already installed, skipping"
+fi
+
 echo "=== Installing fnm and Node.js ==="
 if [ ! -d "$HOME/.local/share/fnm" ]; then
     curl -fsSL https://fnm.vercel.app/install | bash
@@ -97,6 +110,14 @@ if [ ! -d "$DOTFILES_DIR" ]; then
 else
     echo "Already cloned, pulling latest..."
     git -C "$DOTFILES_DIR" pull
+fi
+
+echo "=== Setting zsh as default shell ==="
+if ! grep -q 'exec zsh' ~/.bashrc 2>/dev/null; then
+    echo 'exec zsh' >> ~/.bashrc
+    echo "Added 'exec zsh' to ~/.bashrc"
+else
+    echo "Already configured, skipping"
 fi
 
 echo "=== Running deploy ==="
