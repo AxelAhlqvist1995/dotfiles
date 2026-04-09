@@ -21,7 +21,7 @@ source $CONFIG_DIR/key_bindings.sh
 add_to_path "${DOT_DIR}/custom_bins"
 
 # for uv
-if [ -d "$HOME/.local/bin/env" ]; then
+if [ -f "$HOME/.local/bin/env" ]; then
   source $HOME/.local/bin/env
 fi
 

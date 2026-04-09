@@ -69,5 +69,11 @@ if [ -n "${ALIASES+x}" ]; then
     done
 fi
 
+# Install uv if not already present
+if ! command -v uv &> /dev/null; then
+    echo "installing uv..."
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+fi
+
 echo "changing default shell to zsh"
 chsh -s $(which zsh) || echo "Could not change default shell (may require manual step)"
