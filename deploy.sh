@@ -77,3 +77,5 @@ fi
 
 echo "changing default shell to zsh"
 chsh -s $(which zsh) || echo "Could not change default shell (may require manual step)"
+
+echo "Run 'exec zsh' to reload your shell."
