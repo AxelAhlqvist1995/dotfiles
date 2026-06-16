@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ -n \"$TMUX_PANE\" ] && tmux set-option -p -t \"$TMUX_PANE\" @claude_state running 2>/dev/null || true"
+            "command": "[ -n \"$TMUX_PANE\" ] && tmux set-option -p -t \"$TMUX_PANE\" @claude_state running \\; select-pane -t \"$TMUX_PANE\" -P bg=colour17 2>/dev/null || true"
           }
         ]
       }
@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ -n \"$TMUX_PANE\" ] && tmux set-option -p -t \"$TMUX_PANE\" @claude_state waiting 2>/dev/null || true"
+            "command": "[ -n \"$TMUX_PANE\" ] && tmux set-option -p -t \"$TMUX_PANE\" @claude_state waiting \\; select-pane -t \"$TMUX_PANE\" -P bg=colour52 2>/dev/null || true"
           }
         ]
       }
@@ -26,7 +26,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ -n \"$TMUX_PANE\" ] && tmux set-option -p -t \"$TMUX_PANE\" @claude_state done 2>/dev/null || true"
+            "command": "[ -n \"$TMUX_PANE\" ] && tmux set-option -p -t \"$TMUX_PANE\" @claude_state done \\; select-pane -t \"$TMUX_PANE\" -P bg=default 2>/dev/null || true"
           }
         ]
       }
