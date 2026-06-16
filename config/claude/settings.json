@@ -1,6 +1,16 @@
 {
   "theme": "dark",
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$TMUX_PANE\" ] && tmux set-option -p -t \"$TMUX_PANE\" @claude_state idle \\; select-pane -t \"$TMUX_PANE\" -P bg=#1e2a1e 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
     "UserPromptSubmit": [
       {
         "hooks": [
@@ -36,7 +46,17 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ -n \"$TMUX_PANE\" ] && tmux set-option -p -t \"$TMUX_PANE\" @claude_state done \\; select-pane -t \"$TMUX_PANE\" -P bg=default 2>/dev/null || true"
+            "command": "[ -n \"$TMUX_PANE\" ] && tmux set-option -p -t \"$TMUX_PANE\" @claude_state done \\; select-pane -t \"$TMUX_PANE\" -P bg=#1e2a1e 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$TMUX_PANE\" ] && tmux select-pane -t \"$TMUX_PANE\" -P bg=default \\; set-option -pu -t \"$TMUX_PANE\" @claude_state 2>/dev/null || true"
           }
         ]
       }
