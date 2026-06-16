@@ -54,6 +54,16 @@ if [ -d "$HOME/.config/nvim" ] && [ ! -L "$HOME/.config/nvim" ]; then
 fi
 ln -sf "$DOT_DIR/config/nvim" "$HOME/.config/nvim"
 
+# Claude Code settings (theme + tmux pane run-state hooks)
+# Copied rather than symlinked because Claude Code rewrites settings.json on save,
+# which would replace a symlink with a plain file and silently end the sync.
+mkdir -p "$HOME/.claude"
+if [ -f "$HOME/.claude/settings.json" ] && [ ! -L "$HOME/.claude/settings.json" ]; then
+    echo "Backing up existing Claude settings to ~/.claude/settings.json.bak"
+    cp "$HOME/.claude/settings.json" "$HOME/.claude/settings.json.bak"
+fi
+cp "$DOT_DIR/config/claude/settings.json" "$HOME/.claude/settings.json"
+
 # Vimrc
 if [[ $VIM == "true" ]]; then
     echo "deploying .vimrc"
